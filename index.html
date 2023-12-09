@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPA Calculator</title>
+</head>
+<body>
+    <h1>GPA Calculator</h1>
+
+    <form id="gpaForm">
+        <label for="numSubjects">Number of Subjects:</label>
+        <input type="number" id="numSubjects" min="1" max="10" required>
+
+        <div id="gpaInputs"></div>
+
+        <label for="optionalSubject">Optional Subject GPA:</label>
+        <select id="optionalSubject">
+            <option value="1.00">A-</option>
+            <option value="2.00">A</option>
+            <option value="3.00">A+</option>
+        </select>
+
+        <button type="button" onclick="generateGPAInputs()">Generate GPA Inputs</button>
+        <button type="button" onclick="calculateGPA()">Calculate GPA</button>
+    </form>
+
+    <p id="result"></p>
+
+    <script>
+        function generateGPAInputs() {
+            const numSubjects = parseInt(document.getElementById('numSubjects').value);
+
+            // Clear previous inputs
+            document.getElementById('gpaInputs').innerHTML = '';
+
+            // Generate new GPA inputs
+            for (let i = 1; i <= numSubjects; i++) {
+                const label = document.createElement('label');
+                label.setAttribute('for', `subject${i}`);
+                label.textContent = `Subject ${i} GPA:`;
+
+                const input = document.createElement('input');
+                input.setAttribute('type', 'number');
+                input.setAttribute('step', '0.01');
+                input.setAttribute('min', '0');
+                input.setAttribute('max', '5');
+                input.setAttribute('id', `subject${i}`);
+                input.setAttribute('required', '');
+
+                document.getElementById('gpaInputs').appendChild(label);
+                document.getElementById('gpaInputs').appendChild(input);
+            }
+        }
+
+        function calculateGPA() {
+            const numSubjects = parseInt(document.getElementById('numSubjects').value);
+
+            // Get the values of the GPA inputs
+            const gpas = [];
+            for (let i = 1; i <= numSubjects; i++) {
+                const gpa = parseFloat(document.getElementById(`subject${i}`).value);
+                gpas.push(gpa);
+            }
+
+            // Add the GPA of the optional subject
+            const optionalSubjectGPA = parseFloat(document.getElementById('optionalSubject').value);
+            gpas.push(optionalSubjectGPA);
+
+            // Calculate the total GPA (including optional subject)
+            const totalGPA = gpas.reduce((sum, gpa) => sum + gpa, 0);
+
+            // Calculate the average GPA
+            const averageGPA = totalGPA / numSubjects; // Count only regular subjects
+
+            // Display the result
+            const resultElement = document.getElementById('result');
+            resultElement.innerHTML = `Your GPA is: ${averageGPA.toFixed(2)}`;
+        }
+    </script>
+</body>
+</html>
